@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${title}"></title>
+</head>
+<body>
+    <h1 th:text="${parametro}"></h1>
+    <div>
+        <h2>Parámetros recibidos por url</h2>
+        El parámetro es: <span style="color: cadetblue" th:text="${parametro}"></span>
+        el otro parámetro es: <span style="color: #A961B5" th:text="${otroValor}"></span>
+    </div>
+</body>
+</html>
