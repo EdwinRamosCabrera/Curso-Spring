@@ -1,7 +1,11 @@
 package com.cinema.films.Controllers;
+import com.cinema.films.Services.EquipoServices;
+import com.cinema.films.Services.IService;
 import com.cinema.films.models.Equipo;
 
 import com.cinema.films.models.Jugador;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +16,11 @@ import java.util.Optional;
 
 @Controller
 public class ParametrosController {
+    private IService equipoService;
+
+    public ParametrosController(@Qualifier("equipoEspaña") IService equipoService){
+        this.equipoService = equipoService;
+    }
     @GetMapping(value="/parametros")
     public String parametros(@RequestParam(defaultValue = "default value") String valor, @RequestParam(defaultValue = "", name="valor_dos") String otroValor, Model model){
         model.addAttribute("parametro", valor);
@@ -25,7 +34,7 @@ public class ParametrosController {
     // => Lewandoski (9)
     @GetMapping(value="/equipos/{nombre}/{numero}")
     public String paramtrosPorPath(@PathVariable String nombre, @PathVariable("numero") Integer numero, Model model){  //como es integer se especifica el nombre de la variable
-        Optional<Equipo> equipoOptional = getEquipos().stream().filter(equipo -> nombre.toLowerCase().equals(equipo.getNombre().toLowerCase())).findFirst();
+        Optional<Equipo> equipoOptional = equipoService.getTodos().stream().filter(equipo -> nombre.toLowerCase().equals(equipo.getNombre().toLowerCase())).findFirst();
         if(equipoOptional.isPresent()){
             Optional<Jugador> jugadorOptional = equipoOptional.get().getPlantilla().stream().filter(jugador -> numero == jugador.getNumero()).findFirst();
             if (jugadorOptional.isPresent()){
@@ -34,6 +43,7 @@ public class ParametrosController {
         }
         return "parametros";
     }
+    /*
     public List<Equipo> getEquipos(){
         Equipo barcelona = new Equipo();
         barcelona.setNombre("Barcelona");
@@ -53,4 +63,5 @@ public class ParametrosController {
 
         return List.of(barcelona, realMadrid);
     }
+    */
 }
